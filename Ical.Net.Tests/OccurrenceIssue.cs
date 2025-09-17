@@ -40,8 +40,6 @@ public class OccurrenceIssue
             Console.WriteLine($"\t{e.Uid.Substring(0,7)} {e.Start.Value} {e.End.Value} {e.Summary}");
         }
 
-        var dt = new CalDateTime(new DateTime(2026,1,1));
-
         var occurrences = cal
             .GetOccurrences<CalendarEvent>(
                 new DateTime(2025, 1, 1),
