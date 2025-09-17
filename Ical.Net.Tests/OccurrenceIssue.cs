@@ -43,9 +43,11 @@ public class OccurrenceIssue
         var occurrences = cal
             .GetOccurrences<CalendarEvent>(
                 new DateTime(2025, 1, 1),
-                new DateTime(2026, 1, 1)
-            );
-            //.TakeWhile(p => p.Period.StartTime <= dt);
+                new DateTime(2027, 1, 1)
+            )
+            .OrderBy(e => e.Period.StartTime)
+            .ToList();
+
 
         Console.WriteLine("Occurrences:");
         foreach (var o in occurrences)
@@ -54,6 +56,16 @@ public class OccurrenceIssue
             Console.WriteLine($"\t{e.Uid.Substring(0,7)} {o.Period.StartTime.Value} {o.Period.EndTime.Value} {e.Summary}");
         }
 
-        Assert.That(occurrences, Is.Not.Empty);
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(occurrences, Has.Count.EqualTo(2));
+            // The first occurrence should be the overridden one
+            Assert.That(occurrences[0].Period.StartTime, Is.EqualTo(new CalDateTime(2025, 11,3)));
+            Assert.That(occurrences[0].Source.RecurrenceId, Is.EqualTo(new CalDateTime(2025, 11, 3)));
+            Assert.That(occurrences[1].Period.StartTime, Is.EqualTo(new CalDateTime(2026, 10, 5)));
+            // Not sure why the following is null, in v5 it is not null
+            Assert.That(occurrences[1].Source.RecurrenceId, Is.Null);
+            Assert.That(((CalendarEvent) occurrences[0].Source).Summary, Is.EqualTo("Override Event"));
+        }
     }
 }
