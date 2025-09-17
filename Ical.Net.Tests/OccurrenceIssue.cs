@@ -14,37 +14,22 @@ public class OccurrenceIssue
     {
         var cal = Calendar.Load("""
             BEGIN:VCALENDAR
-            PRODID:-//Google Inc//Google Calendar 70.9054//EN
             VERSION:2.0
-            CALSCALE:GREGORIAN
-            METHOD:PUBLISH
-            X-WR-CALNAME:Non-Critical Support Roster
-            X-WR-TIMEZONE:UTC
+            PRODID:-//Test//EN
             BEGIN:VEVENT
             DTSTART;VALUE=DATE:20251103
             DTEND;VALUE=DATE:20251124
             RRULE:FREQ=WEEKLY;WKST=MO;INTERVAL=48;BYDAY=MO
-            DTSTAMP:20250912T100327Z
-            UID:00p0ja7t2446ja22sl02ah2uun@google.com
-            CREATED:20250214T230308Z
-            LAST-MODIFIED:20250409T173619Z
-            SEQUENCE:1
-            STATUS:CONFIRMED
-            SUMMARY:QWERTY
-            TRANSP:TRANSPARENT
+            UID:test-uid@example.com
+            SUMMARY:Master Event
             END:VEVENT
             BEGIN:VEVENT
             DTSTART;VALUE=DATE:20251103
             DTEND;VALUE=DATE:20251124
-            DTSTAMP:20250912T100327Z
-            UID:00p0ja7t2446ja22sl02ah2uun@google.com
+            UID:test-uid@example.com
             RECURRENCE-ID;VALUE=DATE:20251103
-            CREATED:20250214T230308Z
-            LAST-MODIFIED:20250428T170953Z
             SEQUENCE:1
-            STATUS:CONFIRMED
-            SUMMARY:QWERTY
-            TRANSP:TRANSPARENT
+            SUMMARY:Override Event
             END:VEVENT
             END:VCALENDAR
             """)!;
