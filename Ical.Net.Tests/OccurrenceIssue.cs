@@ -34,12 +34,6 @@ public class OccurrenceIssue
             END:VCALENDAR
             """)!;
 
-        Console.WriteLine("Events:");
-        foreach (var e in cal.Events.OrderBy(x=>x.Start))
-        {
-            Console.WriteLine($"\t{e.Uid.Substring(0,7)} {e.Start.Value} {e.End.Value} {e.Summary}");
-        }
-
         var occurrences = cal
             .GetOccurrences<CalendarEvent>(
                 new DateTime(2025, 1, 1),
@@ -49,17 +43,30 @@ public class OccurrenceIssue
             .ToList();
 
 
+        Console.WriteLine("Events:");
+        foreach (var e in cal.Events.OrderBy(x=>x.Start))
+        {
+            Console.WriteLine($"\t{e.Uid} {e.Start.Value} {e.End.Value} {e.Summary}");
+        }
         Console.WriteLine("Occurrences:");
         foreach (var o in occurrences)
         {
             var e = (CalendarEvent)o.Source;
-            Console.WriteLine($"\t{e.Uid.Substring(0,7)} {o.Period.StartTime.Value} {o.Period.EndTime.Value} {e.Summary}");
+            Console.WriteLine($"\t{e.Uid} {o.Period.StartTime.Value} {o.Period.EndTime.Value} {e.Summary}");
         }
+
+        /*
+           Events:
+           	test-uid@example.com 11/3/2025 12:00:00 AM 11/24/2025 12:00:00 AM Master Event
+           	test-uid@example.com 11/3/2025 12:00:00 AM 11/24/2025 12:00:00 AM Override Event
+           Occurrences:
+           	test-uid@example.com 11/3/2025 12:00:00 AM 11/24/2025 12:00:00 AM Override Event
+           	test-uid@example.com 10/5/2026 12:00:00 AM 10/26/2026 12:00:00 AM Master Event
+        */
 
         using (Assert.EnterMultipleScope())
         {
             Assert.That(occurrences, Has.Count.EqualTo(2));
-            // The first occurrence should be the overridden one
             Assert.That(occurrences[0].Period.StartTime, Is.EqualTo(new CalDateTime(2025, 11,3)));
             Assert.That(occurrences[0].Source.RecurrenceId, Is.EqualTo(new CalDateTime(2025, 11, 3)));
             Assert.That(occurrences[1].Period.StartTime, Is.EqualTo(new CalDateTime(2026, 10, 5)));
